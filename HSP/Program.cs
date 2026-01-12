@@ -1,5 +1,7 @@
 using HSP;
 using HSP.Data;
+using HSP.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<HspDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HspDatabase")));
 
+// Authentication and Authorization
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationService>();
+
 var app = builder.Build();
 
 // HTTP pipeline
@@ -22,7 +31,7 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseDeveloperExceptionPage(); // Add this for better error details
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();

@@ -1,9 +1,99 @@
 ﻿@page "/loans"
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <PageTitle>Loan Management</PageTitle>
 
 <h3>Loan Management</h3>
+
+<AuthorizeView Roles="Admin,Student">
+    <Authorized>
+        <div class="mb-4">
+            <button class="btn btn-primary" @onclick="ShowCreateLoanForm">
+                <i class="bi bi-plus-circle"></i> Create New Loan
+            </button>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@if (showCreateForm)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>New Loan</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="newLoan" OnValidSubmit="CreateLoanAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+
+                <div class="mb-3">
+                    <label for="asset" class="form-label">Equipment</label>
+                    <InputSelect id="asset" class="form-select" @bind-Value="newLoan.AssetId">
+                        <option value="0">-- Select Equipment --</option>
+                        @if (availableAssets != null)
+                        {
+                            @foreach (var asset in availableAssets)
+                            {
+                                <option value="@asset.ItemId">@asset.Name (@asset.Category)</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+
+                @if (isAdmin && users != null)
+                {
+                    <div class="mb-3">
+                        <label for="user" class="form-label">User</label>
+                        <InputSelect id="user" class="form-select" @bind-Value="newLoan.UserId">
+                            <option value="0">-- Select User --</option>
+                            @foreach (var user in users)
+                            {
+                                <option value="@user.UserId">@user.FullName (@user.Email)</option>
+                            }
+                        </InputSelect>
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label for="loanDate" class="form-label">Loan Date</label>
+                    <InputDate id="loanDate" class="form-control" @bind-Value="newLoan.LoanDate" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Due Date</label>
+                    <InputDate id="dueDate" class="form-control" @bind-Value="newLoan.DueDate" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @errorMessage
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <div class="alert alert-success" role="alert">
+                        @successMessage
+                    </div>
+                }
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        }
+                        Create Loan
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelCreateLoan">Cancel</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
 
 @if (Loans == null)
 {
@@ -17,7 +107,16 @@ else
 {
     <div class="card">
         <div class="card-header">
-            <h5>Current Loans</h5>
+            <h5>
+                @if (isAdmin)
+                {
+                    <text>All Loans</text>
+                }
+                else
+                {
+                    <text>My Loans</text>
+                }
+            </h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -25,10 +124,17 @@ else
                     <thead>
                         <tr>
                             <th>Item</th>
-                            <th>User</th>
+                            @if (isAdmin)
+                            {
+                                <th>User</th>
+                            }
                             <th>Loaned</th>
                             <th>Due</th>
                             <th>Status</th>
+                            @if (isAdmin)
+                            {
+                                <th>Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +142,10 @@ else
                         {
                             <tr>
                                 <td>@loan.Asset?.Name</td>
-                                <td>@loan.User?.FullName</td>
+                                @if (isAdmin)
+                                {
+                                    <td>@loan.User?.FullName</td>
+                                }
                                 <td>@loan.LoanDate.ToShortDateString()</td>
                                 <td>@loan.DueDate.ToShortDateString()</td>
                                 <td>
@@ -46,9 +155,20 @@ else
                                     }
                                     else
                                     {
-                                        <span class="badge bg-success">Returned</span>
+                                        <span class="badge bg-success">Returned @loan.ReturnDate.Value.ToShortDateString()</span>
                                     }
                                 </td>
+                                @if (isAdmin)
+                                {
+                                    <td>
+                                        @if (loan.ReturnDate == null)
+                                        {
+                                            <button class="btn btn-sm btn-info" @onclick="() => MarkAsReturnedAsync(loan)">
+                                                Mark as Returned
+                                            </button>
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>

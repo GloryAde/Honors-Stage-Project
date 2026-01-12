@@ -1,3 +1,4 @@
+/* Page with sidebar (authenticated users) */
 .page {
     position: relative;
     display: flex;
@@ -7,53 +8,47 @@
 
 main {
     flex: 1;
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .sidebar {
-    background: linear-gradient(180deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(180deg, #2d3748 0%, #1a202c 50%, #2d3748 100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .top-row {
-    background-color: #ffffff;
-    border-bottom: 2px solid #e9ecef;
+    background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+    border-bottom: 2px solid #e2e8f0;
     justify-content: flex-end;
-    height: 4rem;
+    height: 4.5rem;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-        color: #0066cc;
-        font-weight: 500;
-        transition: color 0.2s ease;
-    }
+.top-row ::deep a {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #667eea;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
 
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        color: #004080;
-        text-decoration: underline;
-    }
-
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-@media (max-width: 640.98px) {
-    .top-row {
-        justify-content: space-between;
-        height: 3.5rem;
-    }
-
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-        font-size: 0.9rem;
-    }
+.top-row ::deep a:hover {
+    color: #764ba2;
 }
 
 @media (min-width: 641px) {
@@ -72,13 +67,6 @@ main {
         position: sticky;
         top: 0;
         z-index: 100;
-        background-color: #ffffff;
-    }
-
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
     }
 
     .top-row, article {
@@ -87,45 +75,164 @@ main {
     }
 }
 
-/* Error UI with better visibility */
+/* Page without sidebar (unauthenticated users) */
+.page-no-sidebar {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Simple Header Bar - University Style */
+.simple-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.simple-header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Header Logo - Left Side */
+.header-logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
+}
+
+.header-logo:hover {
+    color: #4776E6;
+}
+
+/* Header Links - Right Side */
+.header-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.header-links a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.header-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #4776E6;
+    transition: width 0.3s ease;
+}
+
+.header-links a:hover {
+    color: #1e293b;
+}
+
+.header-links a:hover::after {
+    width: 100%;
+}
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    background: #f8fafc;
+}
+
+/* Error UI */
 #blazor-error-ui {
-    background: linear-gradient(135deg, #fff9e6 0%, #fffbf0 100%);
-    color: #856404;
+    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    color: #742a2a;
     bottom: 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    border-top: 3px solid #ffc107;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    border-top: 3px solid #fc8181;
     display: none;
     left: 0;
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
     position: fixed;
     width: 100%;
     z-index: 1000;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.75rem;
+    color: #742a2a;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+}
+
+#blazor-error-ui .dismiss:hover {
+    background-color: rgba(252, 129, 129, 0.2);
+}
+
+#blazor-error-ui .reload {
+    color: #4776E6;
+    text-decoration: underline;
+    font-weight: 700;
+    margin-left: 0.75rem;
+}
+
+#blazor-error-ui .reload:hover {
+    color: #5a87f0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .simple-header-content {
+        padding: 0 1.5rem;
+        height: 70px;
+    }
+
+    .header-logo {
+        font-size: 2rem;
+    }
+
+    .header-links {
+        gap: 1.5rem;
+    }
+
+    .header-links a {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .simple-header-content {
+        padding: 0 1rem;
+        height: 60px;
+    }
+
+    .header-logo {
         font-size: 1.5rem;
-        color: #856404;
-        transition: color 0.2s ease;
-        padding: 0.25rem 0.5rem;
     }
 
-    #blazor-error-ui .dismiss:hover {
-        color: #533f03;
+    .header-links {
+        gap: 1rem;
     }
 
-    #blazor-error-ui .reload {
-        color: #0066cc;
-        text-decoration: underline;
-        font-weight: 600;
-        margin-left: 0.5rem;
+    .header-links a {
+        font-size: 0.875rem;
     }
-
-    #blazor-error-ui .reload:hover {
-        color: #004080;
-    }
+}

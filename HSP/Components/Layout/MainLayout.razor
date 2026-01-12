@@ -1,25 +1,50 @@
 ﻿@namespace HSP.Layout
 @inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
 
 <HeadContent>
     <title>HSP</title>
 </HeadContent>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<AuthorizeView>
+    <Authorized>
+        <!-- Layout with sidebar for authenticated users -->
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <main>
+                <div class="top-row px-4">
+                    <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
         </div>
+    </Authorized>
+    <NotAuthorized>
+        <!-- Simple header bar for unauthenticated users -->
+        <div class="page-no-sidebar">
+            <header class="simple-header">
+                <div class="simple-header-content">
+                    <a href="/" class="header-logo">HSP</a>
+                    <nav class="header-links">
+                        <a href="/login">Login</a>
+                        <a href="/register">Register</a>
+                        <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                    </nav>
+                </div>
+            </header>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+            <main class="main-content">
+                @Body
+            </main>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

@@ -1,9 +1,74 @@
 @page "/users"
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>User Management</PageTitle>
 
 <h3>User Management</h3>
+
+<div class="mb-4">
+    <button class="btn btn-primary" @onclick="ShowAddUserForm">
+        <i class="bi bi-plus-circle"></i> Add New User
+    </button>
+</div>
+
+@if (showAddForm)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Add New User</h5>
+        </div>
+        <div class="card-body">
+            <EditForm Model="newUser" OnValidSubmit="HandleAddUserAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <InputText id="fullName" class="form-control" @bind-Value="newUser.FullName" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText id="email" class="form-control" @bind-Value="newUser.Email" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <InputSelect id="role" class="form-select" @bind-Value="newUser.Role">
+                        <option value="Student">Student</option>
+                        <option value="Admin">Admin</option>
+                    </InputSelect>
+                </div>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @errorMessage
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <div class="alert alert-success" role="alert">
+                        @successMessage
+                    </div>
+                }
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">Add User</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CancelAddUser">Cancel</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
 
 @if (UserList == null)
 {
@@ -27,6 +92,9 @@ else
                             <th>ID</th>
                             <th>Full Name</th>
                             <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +104,28 @@ else
                                 <td>@user.UserId</td>
                                 <td>@user.FullName</td>
                                 <td>@user.Email</td>
+                                <td>
+                                    <span class="badge @(user.IsActive ? "bg-success" : "bg-secondary")">
+                                        @(user.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <button class="btn btn-sm btn-warning" @onclick="() => DeactivateUserAsync(user)">
+                                            Deactivate
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-success" @onclick="() => ActivateUserAsync(user)">
+                                            Activate
+                                        </button>
+                                    }
+                                    <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeleteUserAsync(user)">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         }
                     </tbody>
