@@ -1,0 +1,250 @@
+@page "/register"
+@rendermode InteractiveServer
+@using HSP.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationService AuthService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Register - HSP Library</PageTitle>
+
+<div class="register-page-container">
+    <div class="register-box">
+        <div class="register-header">
+            <div class="register-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+            <h2>Create Account</h2>
+            <p>Join the HSP Library System</p>
+        </div>
+
+        <EditForm Model="registerModel" OnValidSubmit="HandleRegisterAsync" FormName="registerForm">
+            <DataAnnotationsValidator />
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>@errorMessage</span>
+                    <button type="button" class="btn-close" @onclick="@(() => errorMessage = string.Empty)"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>@successMessage</span>
+                    <button type="button" class="btn-close" @onclick="@(() => successMessage = string.Empty)"></button>
+                </div>
+            }
+
+            <div class="form-group">
+                <label for="fullName" class="form-label">Full Name</label>
+                <InputText 
+                    id="fullName" 
+                    class="form-control" 
+                    @bind-Value="registerModel.FullName" 
+                    placeholder="Enter your full name"
+                    autocomplete="name" />
+                <ValidationMessage For="@(() => registerModel.FullName)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <InputText 
+                    id="email" 
+                    class="form-control" 
+                    @bind-Value="registerModel.Email" 
+                    placeholder="Enter your email"
+                    autocomplete="email" />
+                <ValidationMessage For="@(() => registerModel.Email)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <InputText 
+                        id="password" 
+                        type="@(showPassword ? "text" : "password")" 
+                        class="form-control" 
+                        @bind-Value="registerModel.Password" 
+                        placeholder="Create a password"
+                        autocomplete="new-password" />
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        @onclick="TogglePasswordVisibility"
+                        tabindex="-1">
+                        <i class="bi @(showPassword ? "bi-eye-slash-fill" : "bi-eye-fill")"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="@(() => registerModel.Password)" class="validation-message" />
+                <small class="form-text">Password must be at least 6 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="password-wrapper">
+                    <InputText 
+                        id="confirmPassword" 
+                        type="@(showConfirmPassword ? "text" : "password")" 
+                        class="form-control" 
+                        @bind-Value="registerModel.ConfirmPassword" 
+                        placeholder="Confirm your password"
+                        autocomplete="new-password" />
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        @onclick="ToggleConfirmPasswordVisibility"
+                        tabindex="-1">
+                        <i class="bi @(showConfirmPassword ? "bi-eye-slash-fill" : "bi-eye-fill")"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="@(() => registerModel.ConfirmPassword)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="role" class="form-label">I am a</label>
+                <InputSelect id="role" class="form-control" @bind-Value="registerModel.Role">
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Admin">Administrator</option>
+                </InputSelect>
+            </div>
+
+            <div class="terms-section">
+                <div class="form-check">
+                    <InputCheckbox 
+                        id="acceptTerms" 
+                        class="form-check-input" 
+                        @bind-Value="registerModel.AcceptTerms" />
+                    <label for="acceptTerms" class="form-check-label">
+                        I agree to the <a href="#" class="terms-link">Terms and Conditions</a>
+                    </label>
+                </div>
+                <ValidationMessage For="@(() => registerModel.AcceptTerms)" class="validation-message" />
+            </div>
+
+            <button type="submit" class="btn-register" disabled="@isRegistering">
+                @if (isRegistering)
+                {
+                    <span class="spinner-border spinner-border-sm"></span>
+                    <span>Creating Account...</span>
+                }
+                else
+                {
+                    <span>Create Account</span>
+                }
+            </button>
+        </EditForm>
+
+        <div class="login-section">
+            <p>Already have an account? <a href="/login" class="login-link">Sign in here</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterModel registerModel = new();
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private bool isRegistering = false;
+    private bool showPassword = false;
+    private bool showConfirmPassword = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
+
+    private void ToggleConfirmPasswordVisibility()
+    {
+        showConfirmPassword = !showConfirmPassword;
+    }
+
+    private async Task HandleRegisterAsync()
+    {
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            errorMessage = "Passwords do not match.";
+            return;
+        }
+
+        if (!registerModel.AcceptTerms)
+        {
+            errorMessage = "You must accept the terms and conditions.";
+            return;
+        }
+
+        isRegistering = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await AuthService.RegisterAsync(
+                registerModel.FullName,
+                registerModel.Email,
+                registerModel.Password,
+                registerModel.Role
+            );
+
+            if (result.Success)
+            {
+                successMessage = "Account created successfully! Redirecting to login...";
+                StateHasChanged();
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                errorMessage = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An unexpected error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isRegistering = false;
+            StateHasChanged();
+        }
+    }
+
+    public class RegisterModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Full name is required")]
+        [System.ComponentModel.DataAnnotations.StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
+        public string FullName { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email is required")]
+        [System.ComponentModel.DataAnnotations.EmailAddress(ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Password is required")]
+        [System.ComponentModel.DataAnnotations.MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        public string Password { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Please confirm your password")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Please select a role")]
+        public string Role { get; set; } = "Student";
+
+        [System.ComponentModel.DataAnnotations.Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions")]
+        public bool AcceptTerms { get; set; }
+    }
+}
