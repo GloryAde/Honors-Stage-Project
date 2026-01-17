@@ -1,4 +1,10 @@
 /* Modern Design System - Base Styles */
+@font-face {
+    font-family: "bootstrap-icons";
+    src: url("/fonts/bootstrap-icons/bootstrap-icons.woff2") format("woff2"),
+         url("/fonts/bootstrap-icons/bootstrap-icons.woff") format("woff");
+}
+
 :root {
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
@@ -371,7 +377,7 @@ a:hover, .btn-link:hover {
     font-size: 1rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background-color: #f7fafc;
-    width: 100%;
+    width: 390px;
 }
 
 .form-control:hover {
@@ -788,6 +794,10 @@ a:hover, .btn-link:hover {
 /* Bootstrap Icons Support */
 .bi {
     vertical-align: middle;
+}
+
+.bi::before {
+    font-family: "bootstrap-icons" !important;
 }
 
 /* Spinner */
