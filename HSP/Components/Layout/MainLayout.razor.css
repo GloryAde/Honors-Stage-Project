@@ -8,12 +8,13 @@
 
 main {
     flex: 1;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #e8eef5 100%);
 }
 
+/* Modern Sidebar with Light Gradient */
 .sidebar {
-    background: linear-gradient(180deg, #2d3748 0%, #1a202c 50%, #2d3748 100%);
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
     position: relative;
 }
 
@@ -24,40 +25,72 @@ main {
     top: 0;
     bottom: 0;
     width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(180deg, transparent, rgba(33, 111, 222, 0.2), transparent);
 }
 
+/* Expanded Top Row - Matching Pre-Login Style */
 .top-row {
-    background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-    border-bottom: 2px solid #e2e8f0;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
     justify-content: flex-end;
-    height: 4.5rem;
+    height: 80px;
     display: flex;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.top-row ::deep a {
-    white-space: nowrap;
-    margin-left: 1.5rem;
+/* Top Row Content Container */
+.top-row-content {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-left: auto;
+}
+
+/* Welcome Message */
+.user-welcome {
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+/* Logout Link - Styled Like Pre-Login Header Links */
+.logout-link {
+    color: #475569;
     text-decoration: none;
-    color: #667eea;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
 }
 
-.top-row ::deep a:hover {
-    color: #764ba2;
+.logout-link::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
+    transition: width 0.3s ease;
 }
 
+.logout-link:hover {
+    color: #1e293b;
+}
+
+.logout-link:hover::after {
+    width: 100%;
+}
+
+/* Compact Sidebar Width */
 @media (min-width: 641px) {
     .page {
         flex-direction: row;
     }
 
     .sidebar {
-        width: 280px;
+        width: 260px;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -70,8 +103,8 @@ main {
     }
 
     .top-row, article {
-        padding-left: 2.5rem !important;
-        padding-right: 2.5rem !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
     }
 }
 
@@ -110,7 +143,7 @@ main {
 }
 
 .header-logo:hover {
-    color: #4776E6;
+    color: #216fde;
 }
 
 /* Header Links - Right Side */
@@ -136,7 +169,7 @@ main {
     left: 0;
     width: 0;
     height: 2px;
-    background: #4776E6;
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     transition: width 0.3s ease;
 }
 
@@ -154,16 +187,16 @@ main {
     background: #f8fafc;
 }
 
-/* Error UI */
+/* Enhanced Error UI */
 #blazor-error-ui {
-    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-    color: #742a2a;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
     bottom: 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-    border-top: 3px solid #fc8181;
+    box-shadow: 0 -4px 20px rgba(239, 68, 68, 0.2);
+    border-top: 3px solid #ef4444;
     display: none;
     left: 0;
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.5rem;
     position: fixed;
     width: 100%;
     z-index: 1000;
@@ -176,63 +209,25 @@ main {
     right: 1.5rem;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.75rem;
-    color: #742a2a;
+    font-size: 1.5rem;
+    color: #991b1b;
     transition: all 0.2s ease;
     padding: 0.5rem;
-    border-radius: 0.375rem;
+    border-radius: 0.5rem;
 }
 
 #blazor-error-ui .dismiss:hover {
-    background-color: rgba(252, 129, 129, 0.2);
+    background-color: rgba(239, 68, 68, 0.2);
+    transform: translateY(-50%) scale(1.1);
 }
 
 #blazor-error-ui .reload {
-    color: #4776E6;
+    color: #216fde;
     text-decoration: underline;
     font-weight: 700;
     margin-left: 0.75rem;
 }
 
 #blazor-error-ui .reload:hover {
-    color: #5a87f0;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .simple-header-content {
-        padding: 0 1.5rem;
-        height: 70px;
-    }
-
-    .header-logo {
-        font-size: 2rem;
-    }
-
-    .header-links {
-        gap: 1.5rem;
-    }
-
-    .header-links a {
-        font-size: 0.9375rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .simple-header-content {
-        padding: 0 1rem;
-        height: 60px;
-    }
-
-    .header-logo {
-        font-size: 1.5rem;
-    }
-
-    .header-links {
-        gap: 1rem;
-    }
-
-    .header-links a {
-        font-size: 0.875rem;
-    }
+    color: #1a5bb8;
 }

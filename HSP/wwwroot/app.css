@@ -6,7 +6,7 @@
 }
 
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-gradient: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
     --danger-gradient: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
     --warning-gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
@@ -162,7 +162,7 @@ a, .btn-link {
 }
 
 a:hover, .btn-link:hover {
-    color: #ffff;
+    color: #216fde;
 }
 
 /* Modern Button System */
@@ -237,7 +237,7 @@ a:hover, .btn-link:hover {
 }
 
 .btn:focus, .btn:active:focus {
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 0 0 4px rgba(33, 111, 222, 0.2);
     outline: none;
 }
 
@@ -294,8 +294,8 @@ a:hover, .btn-link:hover {
 
 /* Home Page Cards */
 .home-icon-bootstrap {
-    font-size: 4rem;
-    color: #667eea;
+font-size: 4rem;
+color: #216fde;
     display: block;
     margin: 0 auto 1rem;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -312,12 +312,12 @@ a:hover, .btn-link:hover {
 .home-card:hover {
     transform: translateY(-12px) scale(1.02);
     box-shadow: var(--shadow-xl);
-    border-color: #667eea;
+    border-color: #216fde;
 }
 
 .home-card:hover .home-icon-bootstrap {
     transform: scale(1.2) rotate(5deg);
-    color: #764ba2;
+    color: #1a5bb8;
 }
 
 .card-title {
@@ -385,8 +385,8 @@ a:hover, .btn-link:hover {
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+border-color: #216fde;
+box-shadow: 0 0 0 4px rgba(33, 111, 222, 0.1);
     background-color: #fff;
     transform: translateY(-1px);
     outline: none;
@@ -490,7 +490,7 @@ a:hover, .btn-link:hover {
 
 /* Accessibility */
 :focus-visible {
-    outline: 3px solid #667eea;
+    outline: 3px solid #216fde;
     outline-offset: 2px;
 }
 
@@ -533,7 +533,7 @@ a:hover, .btn-link:hover {
 }
 
 .header-logo:hover {
-    color: #4776E6;
+    color: #216fde;
 }
 
 /* Header Links - Right Side */
@@ -559,7 +559,7 @@ a:hover, .btn-link:hover {
     left: 0;
     width: 0;
     height: 2px;
-    background: #4776E6;
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     transition: width 0.3s ease;
 }
 
@@ -665,7 +665,7 @@ a:hover, .btn-link:hover {
 }
 
 .modern-card .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     color: white;
     border: none;
     padding: 1.25rem 1.75rem;
@@ -688,12 +688,12 @@ a:hover, .btn-link:hover {
 }
 
 .modern-table thead th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.8125rem;
-    letter-spacing: 0.5px;
+background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
+color: white;
+font-weight: 700;
+text-transform: uppercase;
+font-size: 0.8125rem;
+letter-spacing: 0.5px;
     padding: 1rem;
     border: none;
 }
@@ -744,8 +744,8 @@ a:hover, .btn-link:hover {
 
 /* Form Enhancements */
 .form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
+    background-color: #216fde;
+    border-color: #216fde;
 }
 
 .form-check.form-switch .form-check-input {

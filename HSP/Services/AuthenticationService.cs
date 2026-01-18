@@ -34,12 +34,13 @@ namespace HSP.Services
                     return new AuthResult { Success = false, Message = "Password must be at least 6 characters long." };
                 }
 
-                // Create new user
-                var user = new User
+                // Create new user with role
+                var user = new HSP.Models.User
                 {
                     FullName = fullName.Trim(),
                     Email = email.Trim().ToLower(),
                     PasswordHash = HashPassword(password),
+                    Role = role,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -98,11 +99,6 @@ namespace HSP.Services
             await _authStateProvider.MarkUserAsLoggedOut();
         }
 
-        public async Task<User?> GetCurrentUserAsync()
-        {
-            return await _authStateProvider.GetCurrentUserAsync();
-        }
-
         private string HashPassword(string password)
         {
             using var sha256 = SHA256.Create();
@@ -110,10 +106,10 @@ namespace HSP.Services
             return Convert.ToBase64String(hashedBytes);
         }
 
-        private bool VerifyPassword(string password, string passwordHash)
+        private bool VerifyPassword(string password, string hash)
         {
             var hashOfInput = HashPassword(password);
-            return hashOfInput == passwordHash;
+            return hashOfInput == hash;
         }
     }
 
@@ -121,6 +117,6 @@ namespace HSP.Services
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-        public User? User { get; set; }
+        public HSP.Models.User? User { get; set; }
     }
 }

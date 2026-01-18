@@ -1,14 +1,11 @@
 ﻿@namespace HSP.Layout
 @inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization
 
-<HeadContent>
-    <title>HSP</title>
-</HeadContent>
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 <AuthorizeView>
     <Authorized>
-        <!-- Layout with sidebar for authenticated users -->
         <div class="page">
             <div class="sidebar">
                 <NavMenu />
@@ -16,7 +13,24 @@
 
             <main>
                 <div class="top-row px-4">
-                    <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                    <div class="top-row-content">
+                        @{
+                            var role = context.User.Claims
+                                .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User";
+                            var userName = context.User.Identity?.Name ?? "Guest";
+                            
+                            // Format role for display
+                            var displayRole = role switch
+                            {
+                                "Admin" => "Administrator",
+                                "Teacher" => "Teacher",
+                                "Student" => "Student",
+                                _ => role
+                            };
+                        }
+                        <span class="user-welcome">Welcome @displayRole, @userName</span>
+                        <a href="/logout" class="logout-link">Logout</a>
+                    </div>
                 </div>
 
                 <article class="content px-4">
@@ -26,28 +40,27 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        <!-- Simple header bar for unauthenticated users -->
         <div class="page-no-sidebar">
             <header class="simple-header">
                 <div class="simple-header-content">
                     <a href="/" class="header-logo">HSP</a>
-                    <nav class="header-links">
+                    <div class="header-links">
                         <a href="/login">Login</a>
                         <a href="/register">Register</a>
-                        <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-                    </nav>
+                    </div>
                 </div>
             </header>
-
-            <main class="main-content">
-                @Body
-            </main>
+            <div class="main-content">
+                <article class="content px-4">
+                    @Body
+                </article>
+            </div>
         </div>
     </NotAuthorized>
 </AuthorizeView>
 
-<div id="blazor-error-ui" data-nosnippet>
+<div id="blazor-error-ui">
     An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
 </div>

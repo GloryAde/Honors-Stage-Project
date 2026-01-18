@@ -28,13 +28,13 @@
 .login-icon {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.25rem;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+    box-shadow: 0 8px 24px rgba(33, 111, 222, 0.25);
 }
 
 .login-icon i {
@@ -93,8 +93,8 @@
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    border-color: #216fde;
+    box-shadow: 0 0 0 4px rgba(33, 111, 222, 0.1);
     outline: none;
 }
 
@@ -129,9 +129,9 @@
 }
 
 .password-toggle:hover {
-    color: #667eea;
-    background-color: rgba(102, 126, 234, 0.12);
-    border-color: #667eea;
+    color: #216fde;
+    background-color: rgba(33, 111, 222, 0.12);
+    border-color: #216fde;
 }
 
 .password-toggle:active {
@@ -170,8 +170,8 @@
 }
 
 .remember-me .form-check-input:checked {
-    background-color: #667eea;
-    border-color: #667eea;
+    background-color: #216fde;
+    border-color: #216fde;
 }
 
 .remember-me label {
@@ -181,21 +181,21 @@
 }
 
 .forgot-password {
-    color: #667eea;
+    color: #216fde;
     text-decoration: none;
     font-size: 0.9375rem;
     font-weight: 600;
 }
 
 .forgot-password:hover {
-    color: #764ba2;
+    color: #1a5bb8;
 }
 
 /* Modern Sign In Button */
 .btn-sign-in {
     width: 100%;
     padding: 1.125rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     border: none;
     border-radius: 12px;
     color: white;
@@ -205,12 +205,12 @@
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 20px rgba(33, 111, 222, 0.3);
 }
 
 .btn-sign-in:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 12px 28px rgba(33, 111, 222, 0.4);
 }
 
 .btn-sign-in:disabled {
@@ -232,13 +232,13 @@
 }
 
 .register-link {
-    color: #667eea;
+    color: #216fde;
     text-decoration: none;
     font-weight: 700;
 }
 
 .register-link:hover {
-    color: #764ba2;
+    color: #1a5bb8;
 }
 
 /* Clean Alert */

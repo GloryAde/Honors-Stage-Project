@@ -1,0 +1,53 @@
+@page "/logout"
+@rendermode InteractiveServer
+@using HSP.Services
+@inject AuthenticationService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Logging Out - HSP Library</PageTitle>
+
+<div class="logout-container">
+    <div class="logout-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Logging out...</span>
+        </div>
+        <p class="mt-3 text-muted">Logging you out...</p>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Log out the user
+        await AuthService.LogoutAsync();
+        
+        // Small delay for UX (optional)
+        await Task.Delay(500);
+        
+        // Redirect to home page (unauthenticated landing page)
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
+
+<style>
+    .logout-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e8eef5 100%);
+    }
+
+    .logout-spinner {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>

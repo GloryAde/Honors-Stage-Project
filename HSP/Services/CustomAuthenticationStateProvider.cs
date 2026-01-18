@@ -47,7 +47,7 @@ namespace HSP.Services
             }
         }
 
-        public async Task MarkUserAsAuthenticated(User user)
+        public async Task MarkUserAsAuthenticated(HSP.Models.User user)
         {
             await _sessionStorage.SetAsync("userId", user.UserId);
             
@@ -61,7 +61,7 @@ namespace HSP.Services
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
         }
 
-        public async Task<User?> GetCurrentUserAsync()
+        public async Task<HSP.Models.User?> GetCurrentUserAsync()
         {
             try
             {
@@ -81,13 +81,14 @@ namespace HSP.Services
             }
         }
 
-        private ClaimsPrincipal CreateClaimsPrincipal(User user)
+        private ClaimsPrincipal CreateClaimsPrincipal(HSP.Models.User user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.FullName),
-                new Claim(ClaimTypes.Email, user.Email),      
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role ?? "Student")
             };
 
             var identity = new ClaimsIdentity(claims, "CustomAuthentication");

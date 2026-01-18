@@ -25,13 +25,13 @@
 .register-icon {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.25rem;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+    box-shadow: 0 8px 24px rgba(33, 111, 222, 0.25);
 }
 
 .register-icon i {
@@ -96,8 +96,8 @@ select.form-control {
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    border-color: #216fde;
+    box-shadow: 0 0 0 4px rgba(33, 111, 222, 0.1);
     outline: none;
 }
 
@@ -139,9 +139,9 @@ select.form-control {
 }
 
 .password-toggle:hover {
-    color: #667eea;
-    background-color: rgba(102, 126, 234, 0.12);
-    border-color: #667eea;
+    color: #216fde;
+    background-color: rgba(33, 111, 222, 0.12);
+    border-color: #216fde;
 }
 
 .password-toggle:active {
@@ -202,7 +202,7 @@ select.form-control {
 .btn-register {
     width: 100%;
     padding: 1.125rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
     border: none;
     border-radius: 12px;
     color: white;
@@ -212,12 +212,12 @@ select.form-control {
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 20px rgba(33, 111, 222, 0.3);
 }
 
 .btn-register:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 12px 28px rgba(33, 111, 222, 0.4);
 }
 
 .btn-register:disabled {
@@ -239,13 +239,13 @@ select.form-control {
 }
 
 .login-link {
-    color: #667eea;
+    color: #216fde;
     text-decoration: none;
     font-weight: 700;
 }
 
 .login-link:hover {
-    color: #764ba2;
+    color: #1a5bb8;
 }
 
 .alert {

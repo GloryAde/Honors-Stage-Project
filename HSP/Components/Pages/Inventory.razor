@@ -13,7 +13,7 @@
         <hr class="my-4" />
     </div>
 
-    <AuthorizeView Roles="Admin">
+    <AuthorizeView Roles="Admin,Teacher">
         <Authorized>
             <div class="action-buttons mb-4">
                 <button class="btn btn-primary" @onclick="ShowAddAssetForm">
@@ -44,7 +44,7 @@
         </div>
     }
 
-    <AuthorizeView Roles="Admin" Context="authContext">
+    <AuthorizeView Roles="Admin,Teacher" Context="authContext">
         <Authorized>
             @if (showAddForm)
             {
