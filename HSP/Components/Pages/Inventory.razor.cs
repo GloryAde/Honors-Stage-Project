@@ -10,7 +10,7 @@ namespace HSP.Components.Pages
     public partial class Inventory : ComponentBase
     {
         [Inject]
-        public HspDbContext Db { get; set; } = default!;
+        public IDbContextFactory<HspDbContext> DbFactory { get; set; } = default!;
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; } = default!;
@@ -28,7 +28,8 @@ namespace HSP.Components.Pages
 
         private async Task LoadAssetsAsync()
         {
-            assets = await Db.Assets.OrderBy(a => a.ItemId).ToListAsync();
+            await using var db = await DbFactory.CreateDbContextAsync();
+            assets = await db.Assets.OrderBy(a => a.ItemId).ToListAsync();
         }
 
         private void ShowAddAssetForm()
@@ -55,8 +56,9 @@ namespace HSP.Components.Pages
                     return;
                 }
 
-                Db.Assets.Add(newAsset);
-                await Db.SaveChangesAsync();
+                await using var db = await DbFactory.CreateDbContextAsync();
+                db.Assets.Add(newAsset);
+                await db.SaveChangesAsync();
 
                 message = $"Asset '{newAsset.Name}' added successfully!";
                 errorMessage = string.Empty;
@@ -86,8 +88,9 @@ namespace HSP.Components.Pages
                 if (!confirmed)
                     return;
 
-                Db.Assets.Remove(asset);
-                await Db.SaveChangesAsync();
+                await using var db = await DbFactory.CreateDbContextAsync();
+                db.Assets.Remove(asset);
+                await db.SaveChangesAsync();
 
                 message = $"Asset '{asset.Name}' deleted successfully!";
                 errorMessage = string.Empty;

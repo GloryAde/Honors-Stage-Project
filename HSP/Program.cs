@@ -1,4 +1,4 @@
-using HSP;
+﻿    using HSP;
 using HSP.Data;
 using HSP.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,9 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// EF Core DbContext
-builder.Services.AddDbContext<HspDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HspDatabase")));
+// EF Core DbContextFactory for Blazor Server
+builder.Services.AddDbContextFactory<HspDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("HspDatabase"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null)));
 
 // Authentication and Authorization
 builder.Services.AddAuthorizationCore();
@@ -22,6 +27,27 @@ builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationService>();
 
 var app = builder.Build();
+
+// Initialize database and seed default data
+try
+{
+    using var scope = app.Services.CreateScope();
+    var dbFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<HspDbContext>>();
+    await using var db = await dbFactory.CreateDbContextAsync();
+    
+    // Ensure database is created and apply migrations
+    await db.Database.MigrateAsync();
+    app.Logger.LogInformation("✅ Database migrations applied successfully");
+    
+    // Seed default administrator account
+    await DbSeeder.SeedDefaultAdminAsync(db);
+    
+    app.Logger.LogInformation("✅ Database initialized successfully");
+}
+catch (Exception ex)
+{
+    app.Logger.LogError(ex, "❌ Database initialization failed: {Message}", ex.Message);
+}
 
 // HTTP pipeline
 if (!app.Environment.IsDevelopment())

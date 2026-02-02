@@ -43,6 +43,7 @@
                     <label for="role" class="form-label">Role</label>
                     <InputSelect id="role" class="form-select" @bind-Value="newUser.Role">
                         <option value="Student">Student</option>
+                        <option value="Teacher">Teacher</option>
                         <option value="Admin">Admin</option>
                     </InputSelect>
                 </div>
@@ -105,6 +106,20 @@ else
                                 <td>@user.FullName</td>
                                 <td>@user.Email</td>
                                 <td>
+                                    @if (user.Role == "Admin")
+                                    {
+                                        <i class="bi bi-shield-fill-check me-1"></i><text>Admin</text>
+                                    }
+                                    else if (user.Role == "Teacher")
+                                    {
+                                        <i class="bi bi-person-badge me-1"></i><text>Teacher</text>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-mortarboard me-1"></i><text>Student</text>
+                                    }
+                                </td>
+                                <td>
                                     <span class="badge @(user.IsActive ? "bg-success" : "bg-secondary")">
                                         @(user.IsActive ? "Active" : "Inactive")
                                     </span>
@@ -113,17 +128,17 @@ else
                                     @if (user.IsActive)
                                     {
                                         <button class="btn btn-sm btn-warning" @onclick="() => DeactivateUserAsync(user)">
-                                            Deactivate
+                                            <i class="bi bi-pause-circle me-1"></i>Deactivate
                                         </button>
                                     }
                                     else
                                     {
                                         <button class="btn btn-sm btn-success" @onclick="() => ActivateUserAsync(user)">
-                                            Activate
+                                            <i class="bi bi-check-circle me-1"></i>Activate
                                         </button>
                                     }
                                     <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeleteUserAsync(user)">
-                                        Delete
+                                        <i class="bi bi-trash me-1"></i>Delete
                                     </button>
                                 </td>
                             </tr>
