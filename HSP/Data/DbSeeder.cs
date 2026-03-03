@@ -19,8 +19,8 @@ namespace HSP.Data
             var defaultAdmin = new User
             {
                 FullName = "System Administrator",
-                Email = "admin@hsp.com",
-                PasswordHash = HashPassword("Admin123!"), // Change the password for later
+                Email = "admin@hsp.com".ToLower(),
+                PasswordHash = HashPassword("Admin123!"),
                 Role = "Admin",
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow

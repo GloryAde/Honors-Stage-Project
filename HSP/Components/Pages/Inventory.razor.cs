@@ -16,10 +16,13 @@ namespace HSP.Components.Pages
         public IJSRuntime JSRuntime { get; set; } = default!;
 
         private List<Asset>? assets;
+        private List<Asset> filteredAssets = new();
         private Asset newAsset = new Asset();
         private bool showAddForm = false;
         private string message = string.Empty;
         private string errorMessage = string.Empty;
+        private string searchTerm = string.Empty;
+        private bool isCardView = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -30,6 +33,51 @@ namespace HSP.Components.Pages
         {
             await using var db = await DbFactory.CreateDbContextAsync();
             assets = await db.Assets.OrderBy(a => a.ItemId).ToListAsync();
+            FilterAssets();
+        }
+
+        private void FilterAssets()
+        {
+            if (assets == null)
+            {
+                filteredAssets = new List<Asset>();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                filteredAssets = assets.ToList();
+                return;
+            }
+
+            var search = searchTerm.ToLower().Trim();
+            filteredAssets = assets
+                .Where(a =>
+                    a.ItemId.ToString().Contains(search) ||
+                    a.PhysicalId.ToLower().Contains(search) ||
+                    a.Name.ToLower().Contains(search) ||
+                    a.Category.ToLower().Contains(search))
+                .ToList();
+        }
+
+        private string SearchTerm
+        {
+            get => searchTerm;
+            set
+            {
+                if (searchTerm != value)
+                {
+                    searchTerm = value;
+                    FilterAssets();
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private void ClearSearch()
+        {
+            searchTerm = string.Empty;
+            FilterAssets();
         }
 
         private void ShowAddAssetForm()
@@ -118,12 +166,12 @@ namespace HSP.Components.Pages
                 }
 
                 var csv = new StringBuilder();
-                csv.AppendLine("ID,Name,Category,Status");
+                csv.AppendLine("ID,Physical ID,Name,Category,Status");
 
                 foreach (var asset in assets)
                 {
                     var status = asset.IsAvailable ? "Available" : "On Loan";
-                    csv.AppendLine($"{asset.ItemId},\"{asset.Name}\",\"{asset.Category}\",{status}");
+                    csv.AppendLine($"{asset.ItemId},\"{asset.PhysicalId}\",\"{asset.Name}\",\"{asset.Category}\",{status}");
                 }
 
                 var bytes = Encoding.UTF8.GetBytes(csv.ToString());
@@ -145,7 +193,8 @@ namespace HSP.Components.Pages
 
         private bool ValidateAsset(Asset asset)
         {
-            return !string.IsNullOrWhiteSpace(asset.Name) && 
+            return !string.IsNullOrWhiteSpace(asset.PhysicalId) &&
+                   !string.IsNullOrWhiteSpace(asset.Name) && 
                    !string.IsNullOrWhiteSpace(asset.Category);
         }
 
@@ -153,6 +202,45 @@ namespace HSP.Components.Pages
         {
             message = string.Empty;
             errorMessage = string.Empty;
+        }
+
+        private List<string> GetCategories()
+        {
+            if (assets == null || !assets.Any())
+                return new List<string>();
+
+            return assets.Select(a => a.Category).Distinct().OrderBy(c => c).ToList();
+        }
+
+        private List<string> GetFilteredCategories()
+        {
+            if (filteredAssets == null || !filteredAssets.Any())
+                return new List<string>();
+
+            return filteredAssets.Select(a => a.Category).Distinct().OrderBy(c => c).ToList();
+        }
+
+        private Microsoft.AspNetCore.Components.MarkupString GetCategoryIcon(string category)
+        {
+            var iconClass = category.ToLower() switch
+            {
+                var c when c.Contains("laptop") || c.Contains("computer") => "bi-laptop",
+                var c when c.Contains("camera") || c.Contains("video") => "bi-camera-video",
+                var c when c.Contains("audio") || c.Contains("headphone") || c.Contains("microphone") => "bi-headphones",
+                var c when c.Contains("tablet") || c.Contains("ipad") => "bi-tablet",
+                var c when c.Contains("projector") || c.Contains("presentation") => "bi-projector",
+                var c when c.Contains("book") => "bi-book",
+                var c when c.Contains("electronic") => "bi-cpu",
+                var c when c.Contains("cable") || c.Contains("adapter") => "bi-plug",
+                _ => "bi-box-seam"
+            };
+
+            return new Microsoft.AspNetCore.Components.MarkupString($"<i class='bi {iconClass}'></i>");
+        }
+
+        private Microsoft.AspNetCore.Components.MarkupString GetEquipmentIcon(string category)
+        {
+            return GetCategoryIcon(category);
         }
     }
 }

@@ -1,99 +1,212 @@
-/* Simplified Button Styles - Match Home Page */
-.action-buttons {
+/* ============================================
+   EQUIPMENT INVENTORY CARD LAYOUT
+   ============================================ */
+
+/* Category Grid */
+.category-summary {
+    margin-bottom: 3rem;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    border-color: #216fde;
+}
+
+.category-icon {
+    font-size: 4rem;
+    color: #216fde;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    transform: scale(1.15) rotate(5deg);
+    color: #1a5bb8;
+}
+
+.category-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+.category-count {
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.category-status {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
-.action-buttons .btn {
-    padding: 0.625rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 0.75rem;
-    border: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Equipment Grid */
+.equipment-section {
+    margin-top: 3rem;
 }
 
-.action-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-.action-buttons .btn-primary {
-    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
-    color: white;
-}
-
-.action-buttons .btn-success {
-    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-    color: white;
-}
-
-.action-buttons .btn-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-    color: white;
-}
-
-.action-buttons .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Modern Card Styling */
-.modern-card {
-    border: none;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.equipment-card {
     background: white;
-    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
 }
 
-.modern-card .card-header {
-    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
-    color: white;
-    border-radius: 1rem 1rem 0 0;
-    padding: 1.25rem 1.5rem;
-    border: none;
+.equipment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    border-color: #216fde;
 }
 
-.modern-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
+.equipment-card.available {
+    border-left: 4px solid #56ab2f;
 }
 
-.modern-card .card-body {
+.equipment-card.unavailable {
+    border-left: 4px solid #f2994a;
+    opacity: 0.85;
+}
+
+.equipment-card-header {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
     padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-/* Page Header */
-.page-header h1 {
-    font-size: 2.5rem;
+.equipment-icon {
+    font-size: 3rem;
+    color: #216fde;
+    transition: all 0.3s ease;
+}
+
+.equipment-card:hover .equipment-icon {
+    transform: scale(1.1) rotate(5deg);
+    color: #1a5bb8;
+}
+
+.equipment-status-badge {
+    display: flex;
+    align-items: center;
+}
+
+.equipment-card-body {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.equipment-name {
+    font-size: 1.25rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #4a8eff 0%, #216fde 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #1a202c;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
 }
 
-.page-header .lead {
+.equipment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.equipment-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #2d3748;
+}
+
+.equipment-detail-item i {
     font-size: 1.125rem;
-    color: #64748b;
 }
 
-/* Status Badges */
-.badge {
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.5rem;
+.detail-label {
     font-weight: 600;
-    font-size: 0.875rem;
+    color: #64748b;
+    min-width: 90px;
 }
 
-.badge.bg-success {
-    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%) !important;
+.equipment-card-footer {
+    padding: 1rem 1.5rem;
+    background: #f7fafc;
+    border-top: 1px solid #e2e8f0;
 }
 
-.badge.bg-danger {
-    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%) !important;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .category-card {
+        padding: 1.5rem;
+    }
+    
+    .category-icon {
+        font-size: 3rem;
+    }
+    
+    .equipment-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .equipment-card-header {
+        padding: 1.25rem;
+    }
+    
+    .equipment-icon {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .equipment-name {
+        font-size: 1.125rem;
+    }
+    
+    .equipment-detail-item {
+        font-size: 0.875rem;
+    }
 }

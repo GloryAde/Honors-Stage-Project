@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HSP.Models
 {
@@ -10,9 +11,12 @@ namespace HSP.Models
         public int AssetId { get; set; }
         public Asset Asset { get; set; } = null!;
 
-        // Foreign key to User
-        public int UserId { get; set; }
-        public User User { get; set; } = null!;
+        // Student Information (no longer using User reference)
+        [Required]
+        public string StudentFullName { get; set; } = string.Empty;
+
+        [Required]
+        public string StudentId { get; set; } = string.Empty;
 
         public DateTime LoanDate { get; set; }
         public DateTime DueDate { get; set; }

@@ -1,21 +1,17 @@
 ﻿@page "/loans"
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Loan Management</PageTitle>
 
 <h3>Loan Management</h3>
 
-<AuthorizeView Roles="Admin,Student">
-    <Authorized>
-        <div class="mb-4">
-            <button class="btn btn-primary" @onclick="ShowCreateLoanForm">
-                <i class="bi bi-plus-circle"></i> Create New Loan
-            </button>
-        </div>
-    </Authorized>
-</AuthorizeView>
+<div class="mb-4">
+    <button class="btn btn-primary" @onclick="ShowCreateLoanForm">
+        <i class="bi bi-plus-circle"></i> Create New Loan
+    </button>
+</div>
 
 @if (showCreateForm)
 {
@@ -29,32 +25,51 @@
                 <ValidationSummary class="text-danger" />
 
                 <div class="mb-3">
+                    <label for="equipmentSearch" class="form-label">Search Equipment</label>
+                    <input type="text" 
+                           id="equipmentSearch" 
+                           class="form-control mb-2" 
+                           @bind="EquipmentSearchTerm" 
+                           @bind:event="oninput"
+                           placeholder="Search by ID, Physical ID, Name, or Category..." />
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> Type to filter equipment
+                    </small>
+                </div>
+
+                <div class="mb-3">
                     <label for="asset" class="form-label">Equipment</label>
                     <InputSelect id="asset" class="form-select" @bind-Value="newLoan.AssetId">
                         <option value="0">-- Select Equipment --</option>
-                        @if (availableAssets != null)
+                        @if (filteredAssets != null && filteredAssets.Any())
                         {
-                            @foreach (var asset in availableAssets)
+                            @foreach (var asset in filteredAssets)
                             {
-                                <option value="@asset.ItemId">@asset.Name (@asset.Category)</option>
+                                <option value="@asset.ItemId">
+                                    [@asset.PhysicalId] @asset.Name (@asset.Category) - ID: @asset.ItemId
+                                </option>
                             }
                         }
+                        else if (!string.IsNullOrWhiteSpace(EquipmentSearchTerm))
+                        {
+                            <option value="0" disabled>No equipment found matching "@EquipmentSearchTerm"</option>
+                        }
                     </InputSelect>
+                    @if (filteredAssets != null)
+                    {
+                        <small class="text-muted">Showing @filteredAssets.Count of @(availableAssets?.Count ?? 0) available items</small>
+                    }
                 </div>
 
-                @if (isAdmin && users != null)
-                {
-                    <div class="mb-3">
-                        <label for="user" class="form-label">User</label>
-                        <InputSelect id="user" class="form-select" @bind-Value="newLoan.UserId">
-                            <option value="0">-- Select User --</option>
-                            @foreach (var user in users)
-                            {
-                                <option value="@user.UserId">@user.FullName (@user.Email)</option>
-                            }
-                        </InputSelect>
-                    </div>
-                }
+                <div class="mb-3">
+                    <label for="studentName" class="form-label">Student Full Name</label>
+                    <InputText id="studentName" class="form-control" @bind-Value="newLoan.StudentFullName" placeholder="Enter student's full name" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="studentId" class="form-label">Student ID</label>
+                    <InputText id="studentId" class="form-control" @bind-Value="newLoan.StudentId" placeholder="Enter student's ID" />
+                </div>
 
                 <div class="mb-3">
                     <label for="loanDate" class="form-label">Loan Date</label>
@@ -107,16 +122,7 @@ else
 {
     <div class="card">
         <div class="card-header">
-            <h5>
-                @if (isAdmin)
-                {
-                    <text>All Loans</text>
-                }
-                else
-                {
-                    <text>My Loans</text>
-                }
-            </h5>
+            <h5>All Loans</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -124,17 +130,12 @@ else
                     <thead>
                         <tr>
                             <th>Item</th>
-                            @if (isAdmin)
-                            {
-                                <th>User</th>
-                            }
+                            <th>Student Name</th>
+                            <th>Student ID</th>
                             <th>Loaned</th>
                             <th>Due</th>
                             <th>Status</th>
-                            @if (isAdmin)
-                            {
-                                <th>Actions</th>
-                            }
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,10 +143,8 @@ else
                         {
                             <tr>
                                 <td>@loan.Asset?.Name</td>
-                                @if (isAdmin)
-                                {
-                                    <td>@loan.User?.FullName</td>
-                                }
+                                <td>@loan.StudentFullName</td>
+                                <td>@loan.StudentId</td>
                                 <td>@loan.LoanDate.ToShortDateString()</td>
                                 <td>@loan.DueDate.ToShortDateString()</td>
                                 <td>
@@ -158,17 +157,14 @@ else
                                         <span class="badge bg-success">Returned @loan.ReturnDate.Value.ToShortDateString()</span>
                                     }
                                 </td>
-                                @if (isAdmin)
-                                {
-                                    <td>
-                                        @if (loan.ReturnDate == null)
-                                        {
-                                            <button class="btn btn-sm btn-info" @onclick="() => MarkAsReturnedAsync(loan)">
-                                                Mark as Returned
-                                            </button>
-                                        }
-                                    </td>
-                                }
+                                <td>
+                                    @if (loan.ReturnDate == null)
+                                    {
+                                        <button class="btn btn-sm btn-info" @onclick="() => MarkAsReturnedAsync(loan)">
+                                            Mark as Returned
+                                        </button>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>

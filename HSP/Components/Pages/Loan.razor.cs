@@ -18,15 +18,15 @@ namespace HSP.Components.Pages
 
         private List<HSP.Models.Loan>? Loans { get; set; }
         private List<Asset>? availableAssets { get; set; }
-        private List<User>? users { get; set; }
-        
+        private List<Asset>? filteredAssets { get; set; }
+
         private bool showCreateForm = false;
         private bool isSubmitting = false;
         private string? errorMessage;
         private string? successMessage;
-        
+        private string equipmentSearchTerm = string.Empty;
+
         private LoanFormModel newLoan = new();
-        private int currentUserId = 0;
         private bool isAdmin = false;
 
         protected override async Task OnInitializedAsync()
@@ -36,40 +36,20 @@ namespace HSP.Components.Pages
 
             if (user.Identity?.IsAuthenticated == true)
             {
-                currentUserId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
                 isAdmin = user.IsInRole("Admin");
             }
 
             await LoadLoansAsync();
             await LoadAvailableAssetsAsync();
-            
-            if (isAdmin)
-            {
-                await LoadUsersAsync();
-            }
         }
 
         private async Task LoadLoansAsync()
         {
-            if (isAdmin)
-            {
-                // Admin sees all loans
-                Loans = await Db.Loans
-                    .Include(l => l.Asset)
-                    .Include(l => l.User)
-                    .OrderByDescending(l => l.LoanDate)
-                    .ToListAsync();
-            }
-            else
-            {
-                // Students see only their loans
-                Loans = await Db.Loans
-                    .Include(l => l.Asset)
-                    .Include(l => l.User)
-                    .Where(l => l.UserId == currentUserId)
-                    .OrderByDescending(l => l.LoanDate)
-                    .ToListAsync();
-            }
+            // All authenticated users can see all loans
+            Loans = await Db.Loans
+                .Include(l => l.Asset)
+                .OrderByDescending(l => l.LoanDate)
+                .ToListAsync();
         }
 
         private async Task LoadAvailableAssetsAsync()
@@ -78,13 +58,46 @@ namespace HSP.Components.Pages
                 .Where(a => a.IsAvailable)
                 .OrderBy(a => a.Name)
                 .ToListAsync();
+
+            FilterAssets();
         }
 
-        private async Task LoadUsersAsync()
+        private void FilterAssets()
         {
-            users = await Db.Users
-                .OrderBy(u => u.FullName)
-                .ToListAsync();
+            if (availableAssets == null)
+            {
+                filteredAssets = null;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(equipmentSearchTerm))
+            {
+                filteredAssets = availableAssets;
+                return;
+            }
+
+            var searchTerm = equipmentSearchTerm.ToLower().Trim();
+            filteredAssets = availableAssets
+                .Where(a =>
+                    a.ItemId.ToString().Contains(searchTerm) ||
+                    a.PhysicalId.ToLower().Contains(searchTerm) ||
+                    a.Name.ToLower().Contains(searchTerm) ||
+                    a.Category.ToLower().Contains(searchTerm))
+                .ToList();
+        }
+
+        private string EquipmentSearchTerm
+        {
+            get => equipmentSearchTerm;
+            set
+            {
+                if (equipmentSearchTerm != value)
+                {
+                    equipmentSearchTerm = value;
+                    FilterAssets();
+                    StateHasChanged();
+                }
+            }
         }
 
         private void ShowCreateLoanForm()
@@ -92,11 +105,12 @@ namespace HSP.Components.Pages
             showCreateForm = true;
             errorMessage = null;
             successMessage = null;
+            equipmentSearchTerm = string.Empty;
+            FilterAssets();
             newLoan = new LoanFormModel
             {
                 LoanDate = DateTime.Today,
-                DueDate = DateTime.Today.AddDays(7),
-                UserId = isAdmin ? 0 : currentUserId // Students loan to themselves
+                DueDate = DateTime.Today.AddDays(7)
             };
         }
 
@@ -105,6 +119,7 @@ namespace HSP.Components.Pages
             showCreateForm = false;
             errorMessage = null;
             successMessage = null;
+            equipmentSearchTerm = string.Empty;
             newLoan = new();
         }
 
@@ -123,15 +138,15 @@ namespace HSP.Components.Pages
                     return;
                 }
 
-                // For students, always use their own ID
-                if (!isAdmin)
+                if (string.IsNullOrWhiteSpace(newLoan.StudentFullName))
                 {
-                    newLoan.UserId = currentUserId;
+                    errorMessage = "Please enter the student's full name.";
+                    return;
                 }
 
-                if (newLoan.UserId == 0)
+                if (string.IsNullOrWhiteSpace(newLoan.StudentId))
                 {
-                    errorMessage = "Please select a user.";
+                    errorMessage = "Please enter the student's ID.";
                     return;
                 }
 
@@ -159,7 +174,8 @@ namespace HSP.Components.Pages
                 var loan = new HSP.Models.Loan
                 {
                     AssetId = newLoan.AssetId,
-                    UserId = newLoan.UserId,
+                    StudentFullName = newLoan.StudentFullName.Trim(),
+                    StudentId = newLoan.StudentId.Trim(),
                     LoanDate = newLoan.LoanDate,
                     DueDate = newLoan.DueDate,
                     ReturnDate = null
@@ -173,7 +189,7 @@ namespace HSP.Components.Pages
                 await Db.SaveChangesAsync();
 
                 successMessage = "Loan created successfully!";
-                
+
                 // Refresh data
                 await LoadLoansAsync();
                 await LoadAvailableAssetsAsync();
@@ -232,7 +248,8 @@ namespace HSP.Components.Pages
         private class LoanFormModel
         {
             public int AssetId { get; set; }
-            public int UserId { get; set; }
+            public string StudentFullName { get; set; } = string.Empty;
+            public string StudentId { get; set; } = string.Empty;
             public DateTime LoanDate { get; set; } = DateTime.Today;
             public DateTime DueDate { get; set; } = DateTime.Today.AddDays(7);
         }

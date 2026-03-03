@@ -33,7 +33,11 @@ namespace HSP.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +51,8 @@ namespace HSP.Migrations
                     LoanId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AssetId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    StudentFullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LoanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -61,23 +66,12 @@ namespace HSP.Migrations
                         principalTable: "Assets",
                         principalColumn: "ItemId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Loans_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_AssetId",
                 table: "Loans",
                 column: "AssetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Loans_UserId",
-                table: "Loans",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -87,10 +81,10 @@ namespace HSP.Migrations
                 name: "Loans");
 
             migrationBuilder.DropTable(
-                name: "Assets");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Assets");
         }
     }
 }
