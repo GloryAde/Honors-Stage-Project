@@ -99,41 +99,39 @@
                             <DataAnnotationsValidator />
                             <ValidationSummary class="alert alert-danger" />
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
+                            <div class="row g-4 mb-3">
+                                <div class="col-md-4 mb-3 mb-md-0">
                                     <label for="assetPhysicalId" class="form-label">
                                         <i class="bi bi-upc-scan me-1"></i>Physical ID
                                     </label>
-                                    <InputText id="assetPhysicalId" class="form-control" @bind-Value="newAsset.PhysicalId" placeholder="e.g., HSP-001, BAR123456" />
+                                    <InputText id="assetPhysicalId" class="form-control" @bind-Value="newAsset.PhysicalId" placeholder="e.g., HSP-001" />
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3 mb-md-0">
                                     <label for="assetName" class="form-label">
                                         <i class="bi bi-tag me-1"></i>Asset Name
                                     </label>
                                     <InputText id="assetName" class="form-control" @bind-Value="newAsset.Name" placeholder="e.g., Laptop Dell XPS 15" />
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4">
                                     <label for="assetCategory" class="form-label">
                                         <i class="bi bi-folder me-1"></i>Category
                                     </label>
-                                    <InputText id="assetCategory" class="form-control" @bind-Value="newAsset.Category" placeholder="e.g., Electronics, Books, Equipment" />
+                                    <InputText id="assetCategory" class="form-control" @bind-Value="newAsset.Category" placeholder="e.g., Electronics, Books" />
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <div class="form-check form-switch">
-                                    <InputCheckbox id="assetAvailable" class="form-check-input" @bind-Value="newAsset.IsAvailable" />
-                                    <label class="form-check-label" for="assetAvailable">
+                                <div class="form-check custom-checkbox-lg d-flex align-items-center">
+                                    <InputCheckbox id="assetAvailable" class="form-check-input me-2" @bind-Value="newAsset.IsAvailable" />
+                                    <label class="form-check-label mb-0" for="assetAvailable">
                                         Available for Loan
                                     </label>
                                 </div>
                             </div>
 
-                            <div class="action-buttons">
+                            <div class="action-buttons mt-4">
                                 <button type="submit" class="btn btn-success">
                                     <i class="bi bi-save me-2"></i>Save Asset
                                 </button>

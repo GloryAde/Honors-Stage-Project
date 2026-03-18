@@ -16,7 +16,7 @@
 /* Simple Login Box - Narrower for compact form */
 .login-box {
     width: 100%;
-    max-width: 420px;
+    max-width: 350px;
 }
 
 /* Header Section - Reduced spacing */
@@ -72,7 +72,7 @@
 
 /* Clean Form Controls - Exact same width as button */
 .form-control {
-    width: 390px;
+    width: 100%;
     padding: 1rem 1.25rem;
     font-size: 1rem;
     border: 2px solid #e2e8f0;
@@ -104,14 +104,13 @@
 }
 
     .password-wrapper .form-control {
-        /*padding-right: 3.5rem;*/
-        field-size: content:390px;
+        padding-right: 3.5rem;
     }
 
 /* Password Toggle Button*/
 .password-toggle {
     position: absolute;
-    left: 91%;
+    right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.08);
