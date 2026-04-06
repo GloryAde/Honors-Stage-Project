@@ -35,7 +35,7 @@ namespace HSP.Components.Pages
         private void ShowAddUserForm()
         {
             showAddForm = true;
-            newUser = new UserFormModel { Role = "Student" };
+            newUser = new UserFormModel { Role = "Teacher" };
             ClearMessages();
         }
 
@@ -139,7 +139,7 @@ namespace HSP.Components.Pages
             public string FullName { get; set; } = string.Empty;
             public string Email { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
-            public string Role { get; set; } = "Student";
+            public string Role { get; set; } = "Teacher";
         }
     }
 }
