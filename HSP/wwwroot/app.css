@@ -301,7 +301,7 @@ a:hover, .btn-link:hover {
     outline: none;
 }
 
-/* Modern Alert System */
+/* Alert System */
 .alert {
     border-radius: var(--radius-md);
     padding: 1.25rem 1.5rem;
@@ -393,7 +393,7 @@ color: #216fde;
     margin-bottom: 1.5rem;
 }
 
-/* Modern Table Design */
+/* Table Design */
 .table {
     background-color: #ffffff;
     border-radius: var(--radius-lg);
@@ -432,7 +432,7 @@ color: #216fde;
     text-align: center;
 }
 
-/* Modern Form Controls */
+/* Form Controls */
 .form-control, .form-select {
     border: 2px solid #e2e8f0;
     border-radius: var(--radius-md);
@@ -503,7 +503,7 @@ small.text-muted i {
     margin-bottom: 0.5rem !important;
 }
 
-/* Modern Cards */
+/* Cards */
 .card {
     background-color: #ffffff;
     border-radius: var(--radius-lg);
@@ -532,7 +532,7 @@ small.text-muted i {
     color: #2d3748;
 }
 
-/* Modern Badges */
+/* Badges */
 .badge {
     padding: 0.5rem 0.875rem;
     font-size: 0.8125rem;
@@ -810,7 +810,7 @@ small.text-muted i {
 }
 
 /* ============================================
-   MODERN PAGE STYLES
+    PAGE STYLES
    ============================================ */
 
 /* Page Header */
@@ -836,7 +836,7 @@ small.text-muted i {
     flex-wrap: wrap;
 }
 
-/* Modern Card Enhancements */
+/* Card Enhancements */
 .modern-card {
     border: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
@@ -868,7 +868,7 @@ small.text-muted i {
     opacity: 0.9;
 }
 
-/* Modern Table */
+/* Table */
 .modern-table {
     margin-bottom: 0;
 }
